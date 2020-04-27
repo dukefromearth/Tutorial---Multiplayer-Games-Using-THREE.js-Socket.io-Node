@@ -8,7 +8,6 @@ import Game from './robo-soccer/game.mjs';
 
 const __dirname = path.resolve(path.dirname(''));
 const environment = process.env.ENV || "prod";
-var num_users = 0;
 const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
