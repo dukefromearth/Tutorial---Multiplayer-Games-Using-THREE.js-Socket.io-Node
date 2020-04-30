@@ -1,4 +1,5 @@
 <html>
+    <meta name="viewport" content="width=device-width, user-scalable=no"/>
 
 <head>
     <!--Bootstrap CDN-->
@@ -10,35 +11,69 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
     <!--Custom styles-->
     <link rel="stylesheet" type="text/css" href="src/public/styles/stylesheet.css">
+    <!-- THREE.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.min.js"></script>
+	<!-- OBJ Loader -->
+    <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+    <!-- AMMO.js -->
+    <script src="https://cdn.jsdelivr.net/npm/ammo-node@1.0.0/ammo.min.js"></script>
+    <!-- Simplex Noise -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
     <!--SocketIO-->
     <script src="/socket.io/socket.io.js"></script>
+    <!-- Custom Games -->
+    <script type="module" src="/src/public/games/ragdoll.mjs"></script>
+    
 </head>
 
 <body>
-    <div class="container">
+    <div id="container" class="container">
         <div id="sign-in" class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
                     <h3>Join Game</h3>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form >
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input id="user-name" type="text" class="form-control" placeholder="username">
-
+                            <input id="user-name" type="text" class="form-control" placeholder="user">
                         </div>
+                        <span>
+                            <div class="input-group-text">Game &nbsp;
+                                <select id="game" class="form-control">
+                                    <option value="ragdoll">Ragdoll</option>
+                                </select>
+                            </div>
+                            <br>
+                            <div class="input-group-text">Type &nbsp; &nbsp; &nbsp;
+                                <select id="type" class="form-control">
+                                    <option value="chores">Chores</option>
+                                </select>
+                            </div>
+                            <br>
+                        </span>
                         <div class="form-group">
-                            <input id="play-button" value="Play" class="btn float-right login_btn">
+                            <input id="play-button" value="Play" class="btn float-right login_btn" onfocus="blur();" >
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        <div id="loading">
+            <div class="wrapper">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="shadow"></div>
+                <div class="shadow"></div>
+                <div class="shadow"></div>
+            </div>
+        </div>
     </div>
-    <script type="module" src="src/public/robo-soccer.mjs" type="text/javascript"></script>
+    <script type="module" src="src/public/csGames.mjs" type="text/javascript"></script>
 </body>
 
 </html>
