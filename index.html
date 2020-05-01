@@ -19,6 +19,8 @@
     <script src="https://cdn.jsdelivr.net/npm/ammo-node@1.0.0/ammo.min.js"></script>
     <!-- Simplex Noise -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+    <!-- Orbit Controls -->
+    <script type="module" src="/src/public/threejs/OrbitControls.js"></script>
     <!--SocketIO-->
     <script src="/socket.io/socket.io.js"></script>
     <!-- Custom Games -->
@@ -47,10 +49,15 @@
                                     <option value="ragdoll">Ragdoll</option>
                                 </select>
                             </div>
-                            <br>
-                            <div class="input-group-text">Type &nbsp; &nbsp; &nbsp;
+                            <div class="input-group-text">Type &nbsp;
                                 <select id="type" class="form-control">
                                     <option value="chores">Chores</option>
+                                </select>
+                            </div>
+                            <div class="input-group-text">Character &nbsp;
+                                <select id="character" class="form-control">
+                                    <option value="purple">Purple</option>
+                                    <option value="green">Green</option>
                                 </select>
                             </div>
                             <br>

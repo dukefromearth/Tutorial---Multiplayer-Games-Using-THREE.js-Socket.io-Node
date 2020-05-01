@@ -17,7 +17,8 @@ function initMobile() {
         const userName = document.getElementById('user-name');
         const game = document.getElementById('game');
         const type = document.getElementById('type');
-        socket.emit('new player', { userName: userName.value, game: game.value, type: type.value });
+        const character = document.getElementById('character');
+        socket.emit('new player', { userName: userName.value, game: game.value, type: type.value, character: character.value });
         hideDiv('sign-in');
         showDiv('loading');
     };
@@ -29,6 +30,7 @@ function initMobile() {
             setupDiv.remove();
             if (gameType === "ragdoll") game = new RagdollControls();
             game.setup();
+            run();
         };
     });
 
@@ -53,12 +55,16 @@ function initGame() {
     // If a game isn't running, set it up
     socket.on('setup game', function (gameType) {
         if (!game) {
-            let setupDiv = document.getElementById('container');
-            setupDiv.remove();
+            let container = document.getElementById('container');
+            container.remove();
             if (gameType === "ragdoll") game = new Ragdoll();
             game.setup();
             run();
         };
+    });
+
+    socket.on('clickRequest', function(data){
+        game.processClickRequest(data.player, data.coords)
     });
 
     showHTML();
@@ -74,6 +80,6 @@ if (isMobile()) {
 
 const run = () => {
     requestAnimationFrame(run);
-    if(game) game.play();
+    if(game) game.play(socket);
 }
 

@@ -7,8 +7,8 @@ export default class Game {
         this.#players = {};
         this.#type = gameType;
     }
-    addPlayer(id, userName, position){
-        this.#players[id] = new Player(id, userName, position);
+    addPlayer(id, userName, character, position){
+        this.#players[id] = new Player(id, userName, character, position);
     }
     removePlayer(id){
         delete this.#players[id];

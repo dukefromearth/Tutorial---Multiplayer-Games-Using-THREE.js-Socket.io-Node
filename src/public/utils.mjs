@@ -116,8 +116,15 @@ export const LoaderHelper = {
 /**
  * Helper for adding easing effect 
  */
-const addEase = (pos, to, ease) => {
+export const addEase = (pos, to, ease) => {
     pos.x += (to.x - pos.x) / ease;
     pos.y += (to.y - pos.y) / ease;
     pos.z += (to.z - pos.z) / ease;
 };
+
+// Adjust window size
+export const onWindowResize = () => {
+    this.camera.aspect = deviceInfo.screenRatio();
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(deviceInfo.screenWidth(), deviceInfo.screenHeight());
+}
