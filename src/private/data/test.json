@@ -1,0 +1,58 @@
+{
+	"test": {
+		"decision": {
+			"data": {
+				"id": "test",
+				"isTimeBased": false,
+				"decisions": {
+					"sweep": {
+						"type": "sweep",
+						"value": 1,
+						"weight": 1,
+						"epoch": 1588694885782
+					},
+					"mop": {
+						"type": "mop",
+						"value": 1,
+						"weight": 2,
+						"epoch": 1588694885782
+					},
+					"dust": {
+						"type": "dust",
+						"value": 1,
+						"weight": 2,
+						"epoch": 1588694885782
+					}
+				}
+			}
+		}
+	},
+	"test2": {
+		"decision": {
+			"data": {
+				"id": "test",
+				"isTimeBased": false,
+				"decisions": {
+					"sweep": {
+						"type": "sweep",
+						"value": 1,
+						"weight": 1,
+						"epoch": 1588694885782
+					},
+					"mop": {
+						"type": "mop",
+						"value": 1,
+						"weight": 2,
+						"epoch": 1588694885782
+					},
+					"dust": {
+						"type": "dust",
+						"value": 1,
+						"weight": 2,
+						"epoch": 1588694885782
+					}
+				}
+			}
+		}
+	}
+}

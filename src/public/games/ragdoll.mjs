@@ -1,4 +1,4 @@
-import { DeviceInfo, onWindowResize } from '../utils.mjs';
+import { DeviceInfo, onWindowResize, LoaderHelper } from '../utils.mjs';
 import { OrbitControls } from "../threejs/OrbitControls.js";
 
 let Ammo = new AmmoLib();
@@ -7,6 +7,7 @@ let debug = true;
 let mouseCoords = new THREE.Vector2();
 let clickRequest = false;
 let deviceInfo = DeviceInfo();
+let loaderHelper = new LoaderHelper('src/public/assets');
 
 export default class Ragdoll {
     constructor() {
@@ -37,15 +38,19 @@ export default class Ragdoll {
         this.softBodyHelpers = new Ammo.btSoftBodyHelpers();
 
         this.armMovement = 0;
+
+        this.players = null;
     }
     playersReady() {
-
         if (!this.players) return false;
         for (let id in this.players) {
-            if (!players[id].ready) return false;
+            if (!this.players[id].ready) return false;
         }
         return true;
-
+    }
+    addPlayer(player) {
+        if(!this.players) this.players = {};
+        this.players[player.id] = player;
     }
     processGeometry(bufGeometry) {
         // Obtain a Geometry
@@ -138,11 +143,11 @@ export default class Ragdoll {
 
     }
 
-    createSoftVolume(bufferGeom, mass, pressure) {
+    createSoftVolume(bufferGeom, mass, pressure, _material) {
 
         this.processGeometry(bufferGeom);
-
-        var volume = new THREE.Mesh(bufferGeom, new THREE.MeshPhongMaterial({ color: 0xFFFFFF }));
+        let material = _material || new THREE.MeshPhongMaterial({ color: 0xFFFFFF });
+        var volume = new THREE.Mesh(bufferGeom, material);
         volume.castShadow = true;
         volume.receiveShadow = true;
         volume.frustumCulled = false;
@@ -237,12 +242,19 @@ export default class Ragdoll {
 
         return body;
     }
-
+    createPlayer(color){
+        let material = new THREE.MeshPhongMaterial({ color: color })
+        let volumeMass = 0.1;
+        let sphereGeometry = new THREE.SphereBufferGeometry(1.5, 40, 25);
+        sphereGeometry.translate(-width / 4, height + 10, -8);
+        this.createSoftVolume(sphereGeometry, volumeMass, 100, material);
+    }
     createObjects() {
         let pos = new THREE.Vector3();
         let quat = new THREE.Quaternion();
         let width = 80;
         let height = 80;
+
         // Ground
         pos.set(0, - 0.5, 0);
         quat.set(0, 0, 0, 1);
@@ -254,11 +266,11 @@ export default class Ragdoll {
             ground.material.needsUpdate = true;
         });
 
-        // Create soft volumes
-        var volumeMass = 0.1;
+        
 
+        var volumeMass = 0.1;
         var sphereGeometry = new THREE.SphereBufferGeometry(1.5, 40, 25);
-        sphereGeometry.translate(5, height + 10, -8);
+        sphereGeometry.translate(width / 4, height + 10, -8);
         this.createSoftVolume(sphereGeometry, volumeMass, 100);
 
         // Rods
@@ -273,6 +285,7 @@ export default class Ragdoll {
             }
         }
 
+        // Platforms
         let numObjects = 8;
         let tWidth = width / numObjects;
         for (let i = 0; i < numObjects; i++) {
@@ -284,7 +297,6 @@ export default class Ragdoll {
 
         // Wall
         pos.set(0, height / 2, -10);
-        // quat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), 90 * Math.PI / 180);
         var obstacle = this.createParalellepiped(width, height, 1, 0, pos, quat, new THREE.MeshPhongMaterial({ color: 0xffffff }));
         obstacle.castShadow = true;
         obstacle.receiveShadow = true;
@@ -292,7 +304,6 @@ export default class Ragdoll {
     }
     initInput() {
         window.addEventListener('mousedown', function (event) {
-            console.log(mouseCoords);
             if (!clickRequest) {
                 mouseCoords.set(
                     (event.clientX / window.innerWidth) * 2 - 1,
@@ -302,7 +313,6 @@ export default class Ragdoll {
             }
 
         }, false);
-        console.log(mouseCoords);
     }
     processClickRequest(user, coords) {
         let pos = new THREE.Vector3();
@@ -326,7 +336,7 @@ export default class Ragdoll {
         ballBody.setFriction(1);
 
         pos.copy(this.raycaster.ray.direction);
-        pos.multiplyScalar(70);
+        pos.multiplyScalar(150);
         ballBody.setLinearVelocity(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
         clickRequest = false;
@@ -356,7 +366,7 @@ export default class Ragdoll {
             ballBody.setFriction(1);
 
             pos.copy(this.raycaster.ray.direction);
-            pos.multiplyScalar(70);
+            pos.multiplyScalar(150);
             ballBody.setLinearVelocity(new Ammo.btVector3(pos.x, pos.y, pos.z));
 
             clickRequest = false;
@@ -425,9 +435,10 @@ export default class Ragdoll {
 
         var deltaTime = this.clock.getDelta();
 
-        this.updatePhysics(deltaTime);
-
-        this.processClick();
+        if (this.playersReady()) {
+            this.updatePhysics(deltaTime);
+            this.processClick();
+        }
 
         this.controls.update(deltaTime);
 
@@ -503,18 +514,13 @@ export default class Ragdoll {
 
         if (debug) console.log("Setting up Ragdoll");
 
+        let deltaTime = this.clock.getDelta();
+
         this.initGraphics();
-
         this.initPhysics();
-
         this.createObjects();
-
         this.initInput();
-
-        var deltaTime = this.clock.getDelta();
-
         this.controls.update(deltaTime);
-
         this.renderer.render(this.scene, this.camera);
 
     }
@@ -524,3 +530,4 @@ export default class Ragdoll {
 
     }
 }
+

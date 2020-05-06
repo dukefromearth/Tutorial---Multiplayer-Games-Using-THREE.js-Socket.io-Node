@@ -9,11 +9,13 @@ export default class Game {
     }
     addPlayer(id, userName, character, position){
         this.#players[id] = new Player(id, userName, character, position);
+        return this.#players[id];
     }
     removePlayer(id){
         delete this.#players[id];
     }
     getPlayer(id){
+        console.log(id);
         return this.#players[id].serialize();
     }
     getType(){
@@ -21,8 +23,10 @@ export default class Game {
     }
     getAllPlayers(){
         let allPlayers = [];
-        this.#players.forEach(function(player){
-            allPlayers.push(player.serialize());
-        });
+        for(let i in this.#players){
+            let p = this.#players[i];
+            allPlayers.push(p.serialize());
+        }
+        return allPlayers;
     }
 }

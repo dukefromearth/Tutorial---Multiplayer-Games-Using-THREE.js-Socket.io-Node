@@ -20,7 +20,6 @@ html {
 .menu-container {
   height: 100%;
   align-content: center;
-  
 }
 
 .card {
@@ -164,4 +163,12 @@ input:focus {
   letter-spacing: 12px;
   color: #fff;
   left: 15%;
+}
+
+.ready_btn {
+  position: absolute;
+  width: 120px;
+  bottom: 20px;
+  left: 50%;
+  margin-left: -60px;
 }

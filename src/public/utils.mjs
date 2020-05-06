@@ -62,26 +62,28 @@ export const isMobile = () => {
 /**
  * Loader Helper
  */
-export const LoaderHelper = {
-    _base: './',
-    _data: {},
-    _loaded: 0,
-    _cb: null,
+export class LoaderHelper {
+    constructor(base) {
+        this._base = base;
+        this._data = {};
+        this._loaded = {};
+        this._cb = null;
+    }
 
     // get loaded resource by name  
     get(name) {
         return this._data[name] || null;
-    },
+    };
 
     // complete handler 
     onReady(cb) {
         this._cb = cb;
-    },
+    };
 
     // common error handler 
     onError(err) {
         console.error(err.message || err);
-    },
+    };
 
     // when a resource is loaded 
     onData(name, data) {
@@ -91,7 +93,7 @@ export const LoaderHelper = {
         let loaded = (total && this._loaded === total);
         let hascb = (typeof this._cb === 'function');
         if (loaded && hascb) this._cb(total);
-    },
+    };
 
     // custom .obj file 
     loadGeometry(name, file) {
@@ -100,8 +102,8 @@ export const LoaderHelper = {
         const path = this._base + '/' + file;
         const loader = new THREE.OBJLoader();
         loader.load(path, data => { this.onData(name, data) }, null, this.onError);
-    },
-
+    };
+    
     // load image file 
     loadTexture(name, file) {
         if (!name || !file) return;
@@ -109,7 +111,8 @@ export const LoaderHelper = {
         const path = this._base + '/' + file;
         const loader = new THREE.TextureLoader();
         loader.load(path, data => { this.onData(name, data) }, null, this.onError);
-    },
+    };
+
 };
 
 

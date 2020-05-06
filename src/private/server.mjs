@@ -5,6 +5,7 @@ import http from 'http';
 import path from 'path';
 import socketIO from 'socket.io';
 import Game from './games/game.mjs';
+import DecisionMaker from './probability-logic/decision-maker.mjs';
 
 const __dirname = path.resolve(path.dirname(''));
 const environment = process.env.ENV || "prod";
@@ -13,6 +14,8 @@ const server = http.Server(app);
 const io = socketIO(server);
 const port_num = 8000;
 const debug = true;
+const decisionMaker = new DecisionMaker();
+decisionMaker.runTest();
 
 let game = null;
 
@@ -35,22 +38,29 @@ io.on('connection', function (socket) {
     socket.on('new player', function (info) {
         let player;
         if (!game) game = new Game(info.game);       // If the game type isn't running, create a new instance of it. 
-        game.addPlayer(socket.id, info.userName, info.character);   // Add player to the current game
-        player = game.getPlayer(socket.id);
+        player = game.addPlayer(socket.id, info.userName, info.character);   // Add player to the current game
+        let data = decisionMaker.getProbs("test");
+        io.emit('setup game', game.getType(), data);  // Send the current game type to the end user
         io.emit('new player', player);              // Notify all existing players that a new player has arrived
-        io.emit('setup game', game.getType());  // Send the current game type to the end user
-        if (debug) console.log("New User: ", player);
+        if (debug) {
+            console.log("New User: ", player);
+            console.log("Data: ", data);
+        }
     });
-
-    // // When a player disconnects, remove them from the game and emit to other players
-    // socket.on('disconnect', function () {
-    //     if (game) game.removePlayer(socket.id);
-    //     io.emit('remove player', socket.id);
-    // });
+    // When a player disconnects, remove them from the game and emit to other players
+    socket.on('disconnect', function () {
+        if (game) game.removePlayer(socket.id);
+        io.emit('remove player', socket.id);
+    });
 
     socket.on('clickRequest', function (coords) {
         if (debug) console.log(coords);
         io.emit('clickRequest', { player: game.getPlayer(socket.id), coords: coords });
     });
+
+    socket.on('player ready', function(){
+        if (debug) console.log (game.getPlayer(socket.id).id, " is ready.");
+        io.emit('player ready', socket.id);
+    })
 
 });
