@@ -1,6 +1,12 @@
 import fs from 'fs';
 import DecisionData from './decision-data.mjs';
 
+/**
+ *
+ *
+ * @export
+ * @class DecisionMaker
+ */
 export default class DecisionMaker {
     constructor() {
         this.decisions = {};

@@ -1,11 +1,11 @@
-import { hideDiv, showDiv, DeviceInfo, isMobile, showHTML } from './utils.mjs'
+import { hideDiv, showDiv, DeviceInfo, isMobile, showHTML } from './utils/utils.mjs'
 import Ragdoll from './games/ragdoll.mjs';
 import RagdollControls from './games/ragdoll-controls.mjs';
 import { constants } from '../shared/constants.mjs';
 
 const playButton = document.getElementById('play-button');
 const socket = io();
-const debug = true;
+const debug = false;
 let game = null;
 
 function initMobile() {
@@ -27,11 +27,17 @@ function initMobile() {
         if (!game) {
             let setupDiv = document.getElementById('container');
             setupDiv.remove();
-            if (gameType === "ragdoll") game = new RagdollControls();
+            if (gameType === "ragdoll") game = new RagdollControls(socket);
             game.setup();
             run();
         };
     });
+
+    socket.on('state', function (state) {
+        if(debug) console.log("Mobile State: ", state);
+        if(game) game.update(state)
+    });
+
 
     showHTML();
 }
@@ -52,23 +58,28 @@ function initGame() {
     });
 
     // If a game isn't running, set it up
-    socket.on('setup game', function (gameType, data) {
+    socket.on('setup game', function (gameType) {
         if (!game) {
             let container = document.getElementById('container');
             container.remove();
-            if (gameType === "ragdoll") game = new Ragdoll(data);
+            if (gameType === "ragdoll") game = new Ragdoll(socket);
             game.setup();
             run();
         };
     });
 
-    socket.on('clickRequest', function (data) {
+    socket.on('click request', function (data) {
         game.processClickRequest(data.player, data.coords);
     });
 
     socket.on('player ready', function (id) {
         game.players[id].ready = true;
     })
+
+    socket.on('state', function (state) {
+        if(debug) console.log("Game State: ", state);
+        if(game) game.update(state)
+    });
 
     showHTML();
 }

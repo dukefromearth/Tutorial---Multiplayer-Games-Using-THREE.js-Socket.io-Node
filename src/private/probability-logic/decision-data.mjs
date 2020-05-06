@@ -1,3 +1,9 @@
+/**
+ *
+ *
+ * @export
+ * @class DecisionData
+ */
 export default class DecisionData {
     constructor(_id, _isTimeBased) {
         this.data = {

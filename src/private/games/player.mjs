@@ -1,3 +1,9 @@
+/**
+ *
+ *
+ * @export
+ * @class Player
+ */
 export default class Player {
     constructor(id, userName, character, position){
         this.id = id;

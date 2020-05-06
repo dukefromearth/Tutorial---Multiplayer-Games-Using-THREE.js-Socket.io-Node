@@ -9,19 +9,19 @@
 						"type": "sweep",
 						"value": 1,
 						"weight": 1,
-						"epoch": 1588694885782
+						"epoch": 1588791355059
 					},
 					"mop": {
 						"type": "mop",
 						"value": 1,
 						"weight": 2,
-						"epoch": 1588694885782
+						"epoch": 1588791355059
 					},
 					"dust": {
 						"type": "dust",
 						"value": 1,
 						"weight": 2,
-						"epoch": 1588694885782
+						"epoch": 1588791355059
 					}
 				}
 			}
@@ -37,19 +37,19 @@
 						"type": "sweep",
 						"value": 1,
 						"weight": 1,
-						"epoch": 1588694885782
+						"epoch": 1588791355059
 					},
 					"mop": {
 						"type": "mop",
 						"value": 1,
 						"weight": 2,
-						"epoch": 1588694885782
+						"epoch": 1588791355059
 					},
 					"dust": {
 						"type": "dust",
 						"value": 1,
 						"weight": 2,
-						"epoch": 1588694885782
+						"epoch": 1588791355059
 					}
 				}
 			}

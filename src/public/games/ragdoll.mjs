@@ -1,14 +1,20 @@
-import { DeviceInfo, onWindowResize, LoaderHelper } from '../utils.mjs';
+import { DeviceInfo, onWindowResize, LoaderHelper } from '../utils/utils.mjs';
 import { OrbitControls } from "../threejs/OrbitControls.js";
 
+
 let Ammo = new AmmoLib();
-console.log(Ammo);
 let debug = true;
 let mouseCoords = new THREE.Vector2();
 let clickRequest = false;
 let deviceInfo = DeviceInfo();
 let loaderHelper = new LoaderHelper('src/public/assets');
 
+/**
+ *
+ *
+ * @export
+ * @class Ragdoll
+ */
 export default class Ragdoll {
     constructor() {
         // Graphics variables
@@ -40,6 +46,7 @@ export default class Ragdoll {
         this.armMovement = 0;
 
         this.players = null;
+        this.state = null;
     }
     playersReady() {
         if (!this.players) return false;
@@ -49,8 +56,11 @@ export default class Ragdoll {
         return true;
     }
     addPlayer(player) {
-        if(!this.players) this.players = {};
+        if (!this.players) this.players = {};
         this.players[player.id] = player;
+    }
+    removePlayer(id){
+        delete this.players[id];
     }
     processGeometry(bufGeometry) {
         // Obtain a Geometry
@@ -242,7 +252,7 @@ export default class Ragdoll {
 
         return body;
     }
-    createPlayer(color){
+    createPlayer(color) {
         let material = new THREE.MeshPhongMaterial({ color: color })
         let volumeMass = 0.1;
         let sphereGeometry = new THREE.SphereBufferGeometry(1.5, 40, 25);
@@ -266,7 +276,7 @@ export default class Ragdoll {
             ground.material.needsUpdate = true;
         });
 
-        
+
 
         var volumeMass = 0.1;
         var sphereGeometry = new THREE.SphereBufferGeometry(1.5, 40, 25);
@@ -392,8 +402,8 @@ export default class Ragdoll {
         // Setup Camera
         this.camera = new THREE.PerspectiveCamera(60, deviceInfo.screenWidth() / deviceInfo.screenHeight(), 0.9, 2000);
         this.camera.position.x = 8;
-        this.camera.position.y = 4;
-        this.camera.position.z = 70;
+        this.camera.position.y = 50;
+        this.camera.position.z = 120;
         // Setup Scene
         this.scene = new THREE.Scene();
         // Setup Renderer
@@ -524,10 +534,14 @@ export default class Ragdoll {
         this.renderer.render(this.scene, this.camera);
 
     }
+
+    update(state) {
+        this.players = state;
+    }
+
     play() {
 
         this.animate();
 
     }
 }
-

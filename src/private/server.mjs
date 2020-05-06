@@ -46,6 +46,7 @@ io.on('connection', function (socket) {
             console.log("New User: ", player);
             console.log("Data: ", data);
         }
+        run();
     });
     // When a player disconnects, remove them from the game and emit to other players
     socket.on('disconnect', function () {
@@ -53,14 +54,21 @@ io.on('connection', function (socket) {
         io.emit('remove player', socket.id);
     });
 
-    socket.on('clickRequest', function (coords) {
+    socket.on('click request', function (coords) {
         if (debug) console.log(coords);
-        io.emit('clickRequest', { player: game.getPlayer(socket.id), coords: coords });
+        io.emit('click request', { player: game.getPlayer(socket.id), coords: coords });
     });
 
-    socket.on('player ready', function(){
-        if (debug) console.log (game.getPlayer(socket.id).id, " is ready.");
-        io.emit('player ready', socket.id);
+    socket.on('player ready', function () {
+        if (debug) console.log(game.getPlayer(socket.id).id, " is ready.");
+        game.players[socket.id].ready = true;
     })
 
 });
+
+function run() {
+    setInterval(function () {
+        io.emit('state', game.getAllPlayers());
+        console.log(game.getAllPlayers());
+    }, 1000 / 30);
+}
